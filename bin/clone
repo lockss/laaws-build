@@ -31,6 +31,6 @@
 
 CMD=$@
 for MOD in $(./bin/modules) ; do
-  git clone git@github.com/lockss/${MOD}
+  git clone git@github.com:lockss/${MOD}
 done
 
