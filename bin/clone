@@ -30,7 +30,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 CMD=$@
-for MOD in $(./modules) ; do
+for MOD in $(./bin/modules) ; do
   git clone git@github.com/lockss/${MOD}
 done
 
