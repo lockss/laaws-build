@@ -64,9 +64,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <module>lockss-util</module>
     <module>laaws-repository-core</module>
     <module>laaws-repository-service</module>
-<!--
     <module>laaws-repository-client</module>
--->
     <module>lockss-tdb-tools</module>
     <module>lockss-tdbxml-maven-plugin</module>
     <module>lockss-core</module>

@@ -31,6 +31,6 @@
 
 CMD=$@
 for MOD in $(./bin/modules) ; do
-  /bin/sh -c "cd ${MOD} && ${CMD}"
+  /bin/sh -c "echo '-------- ${MOD} --------' && cd ${MOD} && ${CMD}"
 done
 
