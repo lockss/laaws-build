@@ -30,4 +30,3 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 perl -nle 'print "$1" if m@<module>([^<]+)</module>@' pom.xml
-
