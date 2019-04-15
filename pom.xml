@@ -46,16 +46,13 @@ POSSIBILITY OF SUCH DAMAGE.
 
   <modules>
     <module>lockss-parent-pom</module>
-    <module>lockss-junit4-bundle</module>
-    <module>lockss-junit5-bundle</module>
+    <module>lockss-pom-bundles</module>
     <module>lockss-util</module>
     <module>laaws-repository-core</module>
     <module>laaws-repository-service</module>
     <module>laaws-repository-client</module>
     <module>lockss-tdb-tools</module>
-    <module>lockss-tdbxml-maven-plugin</module>
     <module>lockss-core</module>
-    <module>lockss-core-bundles</module>
     <module>lockss-spring-bundle</module>
     <module>laaws-configservice</module>
     <module>laaws-metadataextractor-common</module>
