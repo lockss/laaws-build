@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo laaws-repository-service,laaws-configservice,laaws-metadataextractor,laaws-metadataservice,laaws-poller
+
