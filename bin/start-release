@@ -1,0 +1,96 @@
+#!/bin/sh
+
+_0="$(basename "${0}")"
+_D0="$(realpath "$(dirname "${0}")")"
+
+#
+# Banner
+#
+# $1=string
+Banner()
+{
+  echo -e "\033[40;37m${1}\033[0m"
+}
+
+#
+# Exit
+#
+# $1=string
+Exit()
+{
+  echo "${_0}: error: ${1}"
+  echo "${_0}: current branch: $("${_D0}/get-git-branch")"
+  exit 1
+}
+
+#
+# New_Version
+#
+# $1,$2,$3=strings $4=optional string
+New_Version()
+{
+  if [ -z "${4}" ]; then
+    echo "${1}.$(expr "${2}" + 1).0"
+  else
+    echo "$(expr "${1}" + 1).0.$(expr "${3}" + 1).0"
+  fi
+}
+
+#
+# Main
+#
+
+XTRA=''
+if [ -n "${1}" ]; then
+  XTRA="${1}"
+fi
+
+Banner 'Check develop branch...'
+if [ "$("${_D0}/get-git-branch")" != 'develop' ]; then
+  Exit 'Git tree is not in the develop branch'
+fi 
+
+Banner 'Check Git tree...'
+if "${_D0}/is-git-dirty"; then
+  Exit 'Git tree is dirty'
+fi
+
+Banner 'Get POM version...'
+SNAP="$("${_D0}/get-pom-version")"
+
+Banner 'Compute release version...'
+VERS="${SNAP%-SNAPSHOT}"
+if [ "${SNAP}" = "${VERS}" ]; then
+  Exit "bad version: ${SNAP}"
+fi
+RELBRANCH='release'
+if [ -n "${XTRA}" ]; then
+  RELBRANCH="${RELBRANCH}-${XTRA}"
+fi
+RELBRANCH="${RELBRANCH}-${VERS}"
+
+Banner 'Create release branch...'
+git checkout -b "${RELBRANCH}" || Exit 'git checkout -b failed'
+
+Banner 'Update release version...'
+mvn versions:set -DnewVersion="${VERS}" || Exit 'mvn versions:set failed'
+
+Banner 'Commit release branch...'
+git commit -am "Begin ${VERS} release" || Exit 'git commit -am failed'
+
+Banner 'Switch to develop...'
+git checkout develop || Exit 'git checkout failed'
+
+Banner 'Compute snapshot version...'
+VERS2="$(New_Version $(echo "${VERS}" | sed -e 's@\.@ @g'))-SNAPSHOT"
+
+Banner 'Update snapshot version...'
+mvn versions:set -DnewVersion="${VERS2}" || Exit 'mvn versions:set failed'
+
+Banner 'Commit develop branch...'
+git commit -am "Begin ${VERS2} cycle" || Exit 'git commit -am failed'
+
+Banner 'Switch to release branch...'
+git checkout "${RELBRANCH}" || Exit 'git checkout failed'
+
+Banner 'Done.'

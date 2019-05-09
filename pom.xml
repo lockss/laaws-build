@@ -46,23 +46,24 @@ POSSIBILITY OF SUCH DAMAGE.
 
   <modules>
     <module>lockss-parent-pom</module>
-    <module>lockss-pom-bundles</module>
+    <module>lockss-pom-bundles/lockss-junit4-bundle</module>
+    <module>lockss-pom-bundles/lockss-junit5-bundle</module>
     <module>lockss-util</module>
     <module>laaws-repository-core</module>
+    <module>lockss-tdb-tools/lockss-tdb-processor</module>
+    <module>lockss-tdb-tools/lockss-tdbxml-maven-plugin</module>
+    <module>lockss-core</module>
+    <module>lockss-pom-bundles/lockss-core-bundle</module>
+    <module>lockss-pom-bundles/lockss-core-tests-bundle</module>
+    <module>lockss-spring-bundle</module>
     <module>laaws-repository-service</module>
     <module>laaws-repository-client</module>
-    <module>lockss-tdb-tools</module>
-    <module>lockss-core</module>
-    <module>lockss-spring-bundle</module>
     <module>laaws-configservice</module>
     <module>laaws-metadataextractor-common</module>
     <module>laaws-metadataextractor</module>
     <module>laaws-metadataservice</module>
     <module>laaws-poller</module>
   </modules>
-<!--
-    <module>laaws-crawler-service</module>
--->
 
   <!-- Only perform tasks on the child projects -->
   <properties>

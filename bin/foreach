@@ -30,7 +30,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 CMD=$@
-for MOD in $(./bin/modules) ; do
+for MOD in $(./bin/repos) ; do
   /bin/sh -c "echo '-------- ${MOD} --------' && cd ${MOD} && ${CMD}"
 done
 

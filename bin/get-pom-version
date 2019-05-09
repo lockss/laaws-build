@@ -1,0 +1,4 @@
+#!/bin/sh
+
+X="$(grep -om1 '^  <version>.*</version>' pom.xml)" || exit 1
+echo "${X}" | sed -e 's@ *<[^>]*>@@g'

@@ -1,0 +1,72 @@
+#!/bin/sh
+
+_0="$(basename "${0}")"
+_D0="$(realpath "$(dirname "${0}")")"
+
+#
+# Banner
+#
+# $1=string
+Banner()
+{
+  echo -e "\033[40;37m${1}\033[0m"
+}
+
+#
+# Exit
+#
+# $1=string
+Exit()
+{
+  echo "${_0}: error: ${1}"
+  echo "${_0}: current branch: $("${_D0}/get-git-branch")"
+  exit 1
+}
+
+#
+# Main
+#
+
+Banner 'Check release branch...'
+RELBRANCH="$("${_D0}/get-git-branch")"
+if [ "${RELBRANCH%%-*}" != 'release' ]; then
+  Exit "Git tree is not in a release branch"
+fi
+SUFFIX="${RELBRANCH#release-}"
+VERS="${SUFFIX##*-}"
+
+Banner 'Check Git tree...'
+if "${_D0}/is-git-dirty"; then
+  Exit 'Git tree is dirty'
+fi
+
+Banner 'Switch to master branch...'
+git checkout master || Exit 'git checkout failed'
+
+Banner 'Merge release branch into master...'
+git merge -s recursive -Xtheirs --squash "${RELBRANCH}"
+if [ $? != 0 ]; then
+  Banner 'Begin sub-shell...'
+  $SHELL
+  Banner '...end sub-shell'
+fi
+
+Banner 'Commit to master...'
+git commit || Exit 'git commit failed'
+
+Banner 'Tag master...'
+git tag -a "version-${SUFFIX}" || Exit 'git tag failed'
+
+Banner 'Switch to develop...'
+git checkout develop || Exit 'git checkout failed'
+
+Banner 'Merging release branch into develop...'
+git merge --squash "${RELBRANCH}"
+if [ $? != 0 ]; then
+  Banner 'Begin sub-shell...'
+  $SHELL
+  Banner '...end sub-shell'
+fi
+
+Banner 'Commit to develop...'
+git commit || Exit 'git commit failed'
