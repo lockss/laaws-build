@@ -48,7 +48,9 @@ POSSIBILITY OF SUCH DAMAGE.
     <module>lockss-parent-pom</module>
     <module>lockss-pom-bundles/lockss-junit4-bundle</module>
     <module>lockss-pom-bundles/lockss-junit5-bundle</module>
-    <module>lockss-util</module>
+    <module>lockss-util/lockss-util-core</module>
+    <module>lockss-util/lockss-util-entities</module>
+    <module>lockss-util/lockss-util-rest</module>
     <module>laaws-repository-core</module>
     <module>lockss-tdb-tools/lockss-tdb-processor</module>
     <module>lockss-tdb-tools/lockss-tdbxml-maven-plugin</module>
