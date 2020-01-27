@@ -65,6 +65,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <module>laaws-metadataextractor</module>
     <module>laaws-metadataservice</module>
     <module>laaws-poller</module>
+    <module>laaws-soap-service</module>
   </modules>
 
   <!-- Only perform tasks on the child projects -->
