@@ -1,7 +1,7 @@
 #!/bin/sh
 
 _0="$(basename "${0}")"
-_D0="$(realpath "$(dirname "${0}")")"
+_D0="$(cd "$(dirname "${0}")" && pwd)"
 
 #
 # Banner
@@ -13,13 +13,78 @@ Banner()
 }
 
 #
+# Check_Develop
+#
+Check_Develop()
+{
+  Banner 'Check develop branch...'
+  if [ "$("${_D0}/get-git-branch")" != 'develop' ]; then
+    Exit "$(pwd): Git tree is not in the develop branch"
+  fi
+}
+
+#
+# Check_Dirty
+#
+Check_Dirty()
+{
+  Banner 'Check dirty Git tree...'
+  if "${_D0}/is-git-dirty"; then
+    Exit "$(pwd): Git tree is dirty"
+  fi
+}
+
+#
+# Create_Release_Branch
+#
+# $1=optional string
+Create_Release_Branch()
+{
+  Banner 'Get POM version...'
+  SNAP="$("${_D0}/get-pom-version")"
+
+  Banner 'Compute release version...'
+  VERS="${SNAP%-SNAPSHOT}"
+  if [ "${SNAP}" = "${VERS}" ]; then
+    Exit "bad version: ${SNAP}"
+  fi
+  RELBRANCH='release'
+  if [ -n "${1}" ]; then
+    RELBRANCH="${RELBRANCH}-${1}"
+  fi
+  RELBRANCH="${RELBRANCH}-${VERS}"
+
+  Banner 'Create release branch...'
+  git checkout -b "${RELBRANCH}" || Exit 'git checkout -b failed'
+  git push -u origin "${RELBRANCH}" || Exit 'git push -u failed'
+
+  Banner 'Update release version...'
+  mvn versions:set -DnewVersion="${VERS}" || Exit 'mvn versions:set -DnewVersion failed'
+  mvn versions:update-parent -DparentVersion="${PARENT}" || Exit 'mvn versions:set -DparentVersion failed'
+
+  Banner 'Commit release branch...'
+  git commit -am "Begin ${VERS} release" || Exit 'git commit -am failed'
+
+  Banner 'Switch to develop...'
+  git checkout develop || Exit 'git checkout failed'
+
+  Banner 'Compute snapshot version...'
+  VERS2="$(New_Version $(echo "${VERS}" | sed -e 's@\.@ @g'))-SNAPSHOT"
+
+  Banner 'Update snapshot version...'
+  mvn versions:set -DnewVersion="${VERS2}" || Exit 'mvn versions:set failed'
+
+  Banner 'Commit develop branch...'
+  git commit -am "Begin ${VERS2} cycle" || Exit 'git commit -am failed'
+}
+
+#
 # Exit
 #
 # $1=string
 Exit()
 {
-  echo "${_0}: error: ${1}"
-  echo "${_0}: current branch: $("${_D0}/get-git-branch")"
+  echo "${_0}: ${1}"
   exit 1
 }
 
@@ -32,7 +97,7 @@ New_Version()
   if [ -z "${4}" ]; then
     echo "${1}.$(expr "${2}" + 1).0"
   else
-    echo "$(expr "${1}" + 1).0.$(expr "${3}" + 1).0"
+    echo "${1}.0.$(expr "${3}" + 1).0"
   fi
 }
 
@@ -40,20 +105,22 @@ New_Version()
 # Main
 #
 
-XTRA=''
-if [ -n "${1}" ]; then
-  XTRA="${1}"
+if [ -z "${1}" ] ; then
+  Exit "expected: lockss-parent-pom version"
 fi
+PARENT="${1}"
 
-Banner 'Check develop branch...'
-if [ "$("${_D0}/get-git-branch")" != 'develop' ]; then
-  Exit 'Git tree is not in the develop branch'
-fi 
+Check_Develop
+Check_Dirty
 
-Banner 'Check Git tree...'
-if "${_D0}/is-git-dirty"; then
-  Exit 'Git tree is dirty'
-fi
+for mod in $("${_D0}/repos") '.' ; do
+  (
+    Banner "Starting submodule: ${mod}..."
+    cd $mod || Exit "$(pwd): no such subdirectory: ${mod}"
+    Create_Release_Branch "${mod}"
+    Banner "Finishing submodule: ${mod}..."
+  ) || Exit "Exiting..."
+done
 
 Banner 'Get POM version...'
 SNAP="$("${_D0}/get-pom-version")"

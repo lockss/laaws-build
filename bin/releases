@@ -1,0 +1,269 @@
+#!/bin/sh
+
+_0="$(basename "${0}")"
+_D0="$(cd "$(dirname "${0}")" && pwd)"
+
+: set -x
+
+#
+# Check_Develop
+#
+Check_Develop()
+{
+  if [ "$("${_D0}/get-git-branch")" != 'develop' ]; then
+    Exit "Git tree is not in the develop branch"
+  fi
+}
+
+#
+# Check_Dirty
+#
+Check_Dirty()
+{
+  if "${_D0}/is-git-dirty"; then
+    Exit "Git tree is dirty"
+  fi
+}
+
+#
+# Exit
+#
+# $1=string
+Exit()
+{
+  echo "${_0}: $(pwd): ${1}"
+  exit 1
+}
+
+#
+# Get_Parent_Version
+#
+Get_Parent_Version()
+{
+  xmllint --xpath '/*[local-name()="project"]/*[local-name()="parent"]/*[local-name()="version"]/text()' pom.xml 2> /dev/null
+}
+
+#
+# Get_Version
+#
+Get_Version()
+{
+  xmllint --xpath '/*[local-name()="project"]/*[local-name()="version"]/text()' pom.xml 2> /dev/null
+}
+
+#
+# New_Version
+#
+# $1=vers
+New_Version()
+{
+  __V="$(echo "${1}" | sed -e 's@\.@ @g')"
+  if [ -z "${4}" ]; then
+    echo "${1}.$(expr "${2}" + 1).0"
+  else
+    echo "${1}.${2}.$(expr "${3}" + 1).0"
+  fi
+}
+
+#
+# Release_Branch_Name
+#
+# $1=vers $2=optmod 
+Release_Branch_Name()
+{
+  __RELBRANCH='release'
+  if [ -n "${2}" ] && [ "${2}" != '.' ] ; then
+    __RELBRANCH="${__RELBRANCH}-${2}"
+  fi
+  __RELBRANCH="${__RELBRANCH}-${1}"
+  echo "${__RELBRANCH}"
+}
+
+#
+# Set_Parent_Version
+#
+# $1=from $2=to
+Set_Parent_Version()
+{
+  sed -i.bak -e "s@^    <version>${1}</version>@    <version>${2}</version>@" pom.xml
+}
+
+#
+# Set_Version
+#
+# $1=from $2=to
+Set_Version()
+{
+  sed -i.bak -e "s@^  <version>${1}</version>@  <version>${2}</version>@" pom.xml
+}
+
+###
+### MAIN
+###
+
+case "${1}" in
+
+  --create-release-branches)
+    Check_Develop
+    Check_Dirty
+    for mod in $("${_D0}/repos") . ; do
+      (
+        cd "${mod}" || Exit "no such module: ${mod}"
+        SNAP="$(Get_Version)"
+        VERS="${SNAP%-SNAPSHOT}"
+        RELBRA="$(Release_Branch_Name "${VERS}" "${mod}")"
+        git checkout -b "${RELBRA}" || Exit 'git checkout -b failed'
+        git push -u origin "${RELBRA}"
+        git checkout develop || Exit 'git checkout failed'
+      ) || Exit "Exiting..."
+    done
+    ;;
+
+  --update-release-versions)
+    Check_Develop
+    Check_Dirty
+    for mod in $("${_D0}/repos") . ; do
+      (
+        cd "${mod}" || Exit "no such module: ${mod}"
+        SNAP="$(Get_Version)"
+        VERS="${SNAP%-SNAPSHOT}"
+        RELBRA="$(Release_Branch_Name "${VERS}" "${mod}")"
+        git checkout "${RELBRA}" || Exit 'git checkout failed'
+        
+        Set_Version "${SNAP}" "${VERS}"
+        PARSNAP="$(Get_Parent_Version)"
+        PARVERS="${PARSNAP%-SNAPSHOT}"
+        if [ -n "${PARSNAP}" ] ; then
+          Set_Parent_Version "${PARSNAP}" "${PARVERS}"
+        fi
+        git -P diff
+        git commit -am "Begin ${VERS} release" || Exit 'git commit -am failed'
+        git checkout develop || Exit 'git checkout failed'
+      ) || Exit "Exiting..."
+    done
+    ;;
+
+  --update-snapshot-versions)
+    Check_Develop
+    Check_Dirty
+    for mod in $("${_D0}/repos") . ; do
+      (
+        cd "${mod}" || Exit "no such module: ${mod}"
+        SNAP="$(Get_Version)"
+        VERS="${SNAP%-SNAPSHOT}"
+        VERS2="$(New_Version $(echo "${VERS}" | sed -e 's@\.@ @g'))-SNAPSHOT"
+        Set_Version "${SNAP}" "${VERS2}"
+        PARSNAP="$(Get_Parent_Version)"
+        PARVERS="${PARSNAP%-SNAPSHOT}"
+        PARVERS2="$(New_Version $(echo "${PARVERS}" | sed -e 's@\.@ @g'))-SNAPSHOT"
+        if [ -n "${PARSNAP}" ] ; then
+          Set_Parent_Version "${PARSNAP}" "${PARVERS2}"
+        fi
+      ) || Exit "Exiting..."
+    done
+    git -P diff
+    SNAP="$(Get_Version)"
+    git commit -am "Begin ${SNAP} cycle" || Exit 'git commit -am failed'
+    ;;
+
+  --checkout-release-branch)
+    RELBRA="$(git branch | grep --only-matching 'release-[0-9][^ ]\+')"
+    if [ -z "${RELBRA}" ] ; then
+      git branch
+      Exit "could not infer release branch"
+    fi
+    git checkout "${RELBRA}"
+    ;;
+
+  --synthesize-release-branch)
+    for mod in $("${_D0}/repos") . ; do
+      if [ "${mod}" = '.' ] ; then
+        break
+      fi
+      RELBRA="$(git branch | grep --only-matching "release-${mod}-[^ ]\+")"
+      if [ -z "${RELBRA}" ] ; then
+        git branch
+        Exit "could not infer release branch"
+      fi
+      git merge --commit -m "Synthesizing ${RELBRA}" "${RELBRA}" || Exit "error merging ${RELBRA}"
+    done
+    ;;
+    
+  --merge-into-master)
+    git checkout master || Exit 'git checkout master failed'
+    git pull || Exit 'git pull failed'
+    for mod in $("${_D0}/repos") . ; do
+      if [ "${mod}" = '.' ] ; then
+        RELBRA="$(git branch | grep --only-matching 'release-[0-9][^ ]\+')"
+      else
+        RELBRA="$(git branch | grep --only-matching "release-${mod}-[^ ]\+")"
+      fi
+      if [ -z "${RELBRA}" ] ; then
+        git branch
+        Exit "could not infer release branch"
+      fi
+      git merge --squash -srecursive -Xtheirs "origin/${RELBRA}"
+      if [ "$?" != "0" ] ; then
+        git status
+        echo "----- ENTERING SUBSHELL -----"
+        echo "Remember to perform the commit."
+        env PS1="\$ " /bin/bash --norc -i
+        echo "----- EXITING SUBSHELL -----"
+        echo "Continue? (y/n)"
+        read __ANS
+        if [ "${__ANS}" != "y" ] ; then
+          Exit "interrupted after subshell"
+        fi 
+      else
+        git commit
+      fi
+      # Compute Git tag and tag message
+      TAG="version-${RELBRA#release-}"
+      if [ "${mod}" = '.' ] ; then
+        VERS="$(echo "${RELBRA}" | sed -e "s@^release-@@")"
+        TAGMSG="$(basename "$(pwd)") version ${VERS}"
+      else
+        VERS="$(echo "${RELBRA}" | sed -e "s@^release-${mod}-@@")"
+        TAGMSG="${mod} version ${VERS}"
+      fi
+      # Perform Git tag
+      git tag -am "${TAGMSG}" "${TAG}"
+    done
+    ;;
+    
+  --merge-into-develop)
+    git checkout develop || Exit 'git checkout develop failed'
+    git pull || Exit 'git pull failed'
+    for mod in $("${_D0}/repos") . ; do
+      if [ "${mod}" = '.' ] ; then
+        RELBRA="$(git branch | grep --only-matching 'release-[0-9][^ ]\+')"
+      else
+        RELBRA="$(git branch | grep --only-matching "release-${mod}-[^ ]\+")"
+      fi
+      if [ -z "${RELBRA}" ] ; then
+        git branch
+        Exit "could not infer release branch"
+      fi
+      git merge --squash "origin/${RELBRA}"
+      if [ "$?" != "0" ] ; then
+        git status
+        echo "----- ENTERING SUBSHELL -----"
+        echo "Remember to perform the commit."
+        env PS1="\$ " /bin/bash --norc -i
+        echo "----- EXITING SUBSHELL -----"
+        echo "Continue? (y/n)"
+        read __ANS
+        if [ "${__ANS}" != "y" ] ; then
+          Exit "interrupted after subshell"
+        fi 
+      else
+        git commit -am "Merging from ${RELBRA}"
+      fi
+    done
+    ;;
+    
+  *)
+    Exit "unexpected argument: ${1}"
+    ;;
+    
+esac
