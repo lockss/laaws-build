@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-Copyright (c) 2000-2019, Board of Trustees of Leland Stanford Jr. University
+Copyright (c) 2000-2021, Board of Trustees of Leland Stanford Jr. University
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -48,15 +48,19 @@ POSSIBILITY OF SUCH DAMAGE.
     <module>lockss-parent-pom</module>
     <module>lockss-pom-bundles/lockss-junit4-bundle</module>
     <module>lockss-pom-bundles/lockss-junit5-bundle</module>
-    <module>lockss-util/lockss-util-core</module>
-    <module>lockss-util/lockss-util-entities</module>
-    <module>lockss-util/lockss-util-rest</module>
+    <module>lockss-util</module>
+<!--    <module>lockss-util/lockss-util-core</module>-->
+<!--    <module>lockss-util/lockss-util-entities</module>-->
+<!--    <module>lockss-util/lockss-util-rest</module>-->
     <module>laaws-repository-core</module>
-    <module>lockss-tdb-tools/lockss-tdb-processor</module>
-    <module>lockss-tdb-tools/lockss-tdbxml-maven-plugin</module>
+    <module>lockss-tdb-tools</module>
+<!--    <module>lockss-tdb-tools/lockss-tdb-processor</module>-->
+<!--    <module>lockss-tdb-tools/lockss-tdbxml-maven-plugin</module>-->
     <module>lockss-core</module>
     <module>lockss-pom-bundles/lockss-core-bundle</module>
     <module>lockss-pom-bundles/lockss-core-tests-bundle</module>
+<!--    <module>lockss-plugin-compat</module>-->
+<!--    <module>lockss-pom-bundles/lockss-plugins-parent-pom</module>-->
     <module>lockss-spring-bundle</module>
     <module>laaws-repository-service</module>
     <module>laaws-repository-tools</module>
