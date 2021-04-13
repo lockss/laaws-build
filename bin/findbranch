@@ -77,7 +77,7 @@ for mod in $(./bin/repos) ; do
             if [ -z "${lb}" ]; then
                 suff=" (R)"
             fi
-        elif [ -n "${rb}" ]; then
+        elif [ -n "${lb}" ]; then
             suff=" (L)"
         fi
     fi
