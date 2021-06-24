@@ -104,6 +104,10 @@ Set_Version()
 case "${1}" in
 
   --create-release-branches)
+    case "${2}" in
+      --reverse) REVERSE=true;;
+      *)         REVERSE=false;;
+    esac
     Check_Develop
     Check_Dirty
     for mod in $("${_D0}/repos") . ; do
@@ -111,9 +115,14 @@ case "${1}" in
         cd "${mod}" || Exit "no such module: ${mod}"
         SNAP="$(Get_Version)"
         VERS="${SNAP%-SNAPSHOT}"
+        if [ "${REVERSE}" = 'true' ] ; then
+          VERS="$(echo "${VERS}" | awk -F. '{printf("%d.%d.%d",$1,$2-1,$3)}')"
+        fi
         RELBRA="$(Release_Branch_Name "${VERS}" "${mod}")"
         git checkout -b "${RELBRA}" || Exit 'git checkout -b failed'
-        git push -u origin "${RELBRA}"
+        if [ "${REVERSE}" != 'true' ] ; then
+          git push -u origin "${RELBRA}"
+        fi
         git checkout develop || Exit 'git checkout failed'
       ) || Exit "Exiting..."
     done
