@@ -54,7 +54,7 @@ Get_Version()
 #
 # New_Version
 #
-# $1=vers
+# $1.$2.$3(.$4) = three (or four) part version
 New_Version()
 {
   __V="$(echo "${1}" | sed -e 's@\.@ @g')"
