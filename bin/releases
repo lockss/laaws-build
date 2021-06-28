@@ -183,7 +183,7 @@ case "${1}" in
       git branch
       Exit "could not infer release branch"
     fi
-    git checkout "${RELBRA}"
+    git checkout "${RELBRA}" || Exit "error switching to ${RELBRA}"
     ;;
 
   --synthesize-release-branch)
@@ -198,6 +198,16 @@ case "${1}" in
       fi
       git merge --commit -m "Synthesizing ${RELBRA}" "${RELBRA}" || Exit "error merging ${RELBRA}"
     done
+    ;;
+    
+  --reset-release-branch)
+    RELBRA="$(git branch | grep --only-matching 'release-[0-9][^ ]\+')"
+    if [ -z "${RELBRA}" ] ; then
+      git branch
+      Exit "could not infer release branch"
+    fi
+    git checkout "${RELBRA}" || Exit "error switching to ${RELBRA}"
+    git reset --hard "origin/${RELBRA}" || Exit "error resetting ${RELBRA}"
     ;;
     
   --merge-into-master)
@@ -242,6 +252,15 @@ case "${1}" in
     done
     ;;
     
+  --diff-release-branch)
+    RELBRA="$(git branch | grep --only-matching 'release-[0-9][^ ]\+')"
+    if [ -z "${RELBRA}" ] ; then
+      git branch
+      Exit "could not infer release branch"
+    fi
+    git diff "${RELBRA}" || Exit "diff with ${RELBRA} failed"
+    ;;
+
   --merge-into-develop)
     git checkout develop || Exit 'git checkout develop failed'
     git pull || Exit 'git pull failed'
