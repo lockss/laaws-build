@@ -59,8 +59,9 @@ POSSIBILITY OF SUCH DAMAGE.
     <module>lockss-core</module>
     <module>lockss-pom-bundles/lockss-core-bundle</module>
     <module>lockss-pom-bundles/lockss-core-tests-bundle</module>
-<!--    <module>lockss-plugin-compat</module>-->
-<!--    <module>lockss-pom-bundles/lockss-plugins-parent-pom</module>-->
+    <module>lockss-plugin-compat</module>
+    <module>lockss-pom-bundles/lockss-plugins-parent-pom</module> <!-- requires -DbuildingParent -->
+    <module>lockss-plugins-archetype</module>
     <module>lockss-spring-bundle</module>
     <module>laaws-repository-service</module>
     <module>laaws-repository-tools</module>
