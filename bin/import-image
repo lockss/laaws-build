@@ -1,0 +1,117 @@
+#!/bin/sh
+
+# Copyright (c) 2000-2021, Board of Trustees of Leland Stanford Jr. University
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+#
+# 3. Neither the name of the copyright holder nor the names of its contributors
+# may be used to endorse or promote products derived from this software without
+# specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+# List of either repo or repo:tag to import
+LOCKSS_IMAGE_REPOS=(
+  lockss/laaws-poller
+  lockss/laaws-metadata-service
+  lockss/laaws-metadata-extraction-service
+  lockss/laaws-configuration-service
+  lockss/laaws-repository-service
+)
+
+CTR_CLI="k3s ctr"
+
+usage() {
+  echo "Usage: import-image [-r <remote-host>] [--lockss] <repo[:tag]>"
+  echo "  Imports a Docker image into Containerd given the name of the image to"
+  echo "  import. If the image repo is specified without a tag, then the images"
+  echo "  of all tags within that repo are imported."
+  echo
+  echo "  --lockss        Import all LOCKSS service images"
+  echo "  -r user@host    Import over an SSH pipe to remote Containerd instance"
+  echo "  -c ctr          Path to Containerd CLI (default: k3s ctr)"
+}
+
+import_image() {
+  # May contain images of all tags if only repo was specified
+  local images=$(docker images $1 | tail +2 | sed -E 's/\s+/:/g' | cut -d':' -f1,2)
+
+  if [ -z "${images[*]}" ]; then
+    echo "WARNING: No images found for $1"
+    return
+  fi
+
+  for image in $images; do
+    docker save $image | $CTR_CLI images import -
+  done
+}
+
+declare -a images
+declare remote_host
+
+while true; do
+  case "$1" in
+  "--lockss" )
+    # May append more than once but we later process
+    # the array on its unique elements
+    images+=(${LOCKSS_IMAGE_REPOS[@]})
+    shift
+    continue
+    ;;
+  "-r" )
+    shift
+    remote_host=$1
+    shift
+    continue
+    ;;
+  "-c" )
+    shift
+    CTR_CLI=$1
+    shift
+    continue
+    ;;
+  -*)
+    usage
+    exit 1
+    ;;
+  esac
+
+  # If processing a non-empty argument, treat it as
+  # the name of an image
+  if [ ! -z $1 ]; then
+    images[${#images[@]}]=$1
+    shift
+    continue
+  fi
+
+  break
+done
+
+if [ ! -z $remote_host ]; then
+  CTR_CLI="ssh $remote_host $CTR_CLI"
+fi
+
+unique_images=($(printf "%s\n" "${images[@]}" | sort -u))
+
+for image in ${unique_images[@]}; do
+  import_image $image
+done
