@@ -29,7 +29,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-# List of either repo or repo:tag to import
+# Default list of LOCKSS service Docker images (repo or repo:tag)
 LOCKSS_IMAGE_REPOS=(
   lockss/laaws-poller
   lockss/laaws-metadata-service
@@ -38,10 +38,12 @@ LOCKSS_IMAGE_REPOS=(
   lockss/laaws-repository-service
 )
 
+# Default Containerd CLI path
 CTR_CLI="k3s ctr"
 
 usage() {
-  echo "Usage: import-image [-r <remote-host>] [--lockss] <repo[:tag]>"
+  echo "Usage: import-image [-c ctr] [-r <remote-host>] [--lockss] <repo[:tag]>"
+  echo
   echo "  Imports a Docker image into Containerd given the name of the image to"
   echo "  import. If the image repo is specified without a tag, then the images"
   echo "  of all tags within that repo are imported."
@@ -106,10 +108,12 @@ while true; do
   break
 done
 
+# Prefix CTR_CLI with SSH pipe if remote host was specified
 if [ ! -z $remote_host ]; then
   CTR_CLI="ssh $remote_host $CTR_CLI"
 fi
 
+# Generate array of unique images to avoid re-importing
 unique_images=($(printf "%s\n" "${images[@]}" | sort -u))
 
 for image in ${unique_images[@]}; do
