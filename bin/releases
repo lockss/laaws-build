@@ -66,6 +66,15 @@ New_Version()
 }
 
 #
+# Old_Version
+#
+# $1.$2.$3 = three part version
+Old_Version()
+{
+  echo "${1}.$(expr "${2}" - 1).0"
+}
+
+#
 # Release_Branch_Name
 #
 # $1=vers $2=optmod 
@@ -172,7 +181,6 @@ case "${1}" in
         fi
       ) || Exit "Exiting..."
     done
-    git -P diff
     SNAP="$(Get_Version)"
     git commit -am "Begin ${SNAP} cycle" || Exit 'git commit -am failed'
     ;;
@@ -183,6 +191,15 @@ case "${1}" in
       git branch
       Exit "could not infer release branch"
     fi
+    git checkout "${RELBRA}" || Exit "error switching to ${RELBRA}"
+    ;;
+
+  --checkout-previous-release-branch)
+    Check_Develop
+    SNAP="$(Get_Version)"
+    VERS="${SNAP%-SNAPSHOT}"
+    VERS2="$(Old_Version $(echo "${VERS}" | sed -e 's@\.@ @g'))"
+    RELBRA="$(Release_Branch_Name "${VERS2}")"
     git checkout "${RELBRA}" || Exit "error switching to ${RELBRA}"
     ;;
 
