@@ -36,6 +36,7 @@ LOCKSS_IMAGE_REPOS=(
   lockss/laaws-metadata-extraction-service
   lockss/laaws-configuration-service
   lockss/laaws-repository-service
+  lockss/laaws-soap-service
 )
 
 # Default Containerd CLI path
