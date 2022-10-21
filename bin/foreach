@@ -31,6 +31,6 @@
 
 CMD=$@
 for MOD in $(./bin/repos) ; do
-  /bin/sh -c "echo '-------- ${MOD} --------' && cd ${MOD} && ${CMD}"
+  env MODULE=${MOD} /bin/sh -c "echo '-------- ${MOD} --------' && cd ${MOD} && ${CMD}"
 done
 
