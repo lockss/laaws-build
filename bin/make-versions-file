@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Create a versions file with a line for each artifact:
+# <groupId>.<artifactId>	<version>
+
+usage() {
+  echo "Usage: `basename $0` <output-file> [ <branch> ]"
+  echo " <branch> defaults to \"develop\""
+}
+
+output=${1}
+branch=${2:-develop}
+
+if [ -z "${output}" ]; then
+  usage
+  exit 1
+fi
+
+foreach "git checkout ${branch} && git pull" || exit 1
+echo "# Artifact versions on ${branch} branch  `date`" >${output}
+echo >>${output}
+foreach "pom-artifact-version >>${output}" || exit 1
