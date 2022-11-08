@@ -30,7 +30,12 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 CMD=$@
-for MOD in $(./bin/repos) ; do
-  env MODULE=${MOD} /bin/sh -c "echo '-------- ${MOD} --------' && cd ${MOD} && ${CMD}"
-done
 
+err_exit() {
+  echo "command exited w/ error, foreach exiting"
+  exit 1
+}
+
+for MOD in $(./bin/repos) ; do
+  env MODULE=${MOD} /bin/sh -c "echo '-------- ${MOD} --------' && cd ${MOD} && ${CMD}" || err_exit
+done
