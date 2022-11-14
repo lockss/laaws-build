@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# echo the groupid.artifactid\version from the pom in this directory
+# echo "<groupid>:<artifactid>	<version>" from the pom in this directory
 
-VERSION_LINE=$(mvn -q -Dexec.executable="echo" -Dexec.args='${project.groupId}.${project.artifactId}\t${project.version}' org.codehaus.mojo:exec-maven-plugin:1.3.1:exec)
+VERSION_LINE=$(mvn -q -Dexec.executable="echo" -Dexec.args='${project.groupId}:${project.artifactId}\t${project.version}' org.codehaus.mojo:exec-maven-plugin:1.3.1:exec)
 echo "${VERSION_LINE}"
