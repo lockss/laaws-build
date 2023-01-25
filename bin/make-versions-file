@@ -1,22 +1,26 @@
 #!/bin/sh
 
-# Create a versions file with a line for each artifact:
-# <groupId>.<artifactId>	<version>
-
 usage() {
-  echo "Usage: `basename $0` <output-file> [ <branch> ]"
-  echo " <branch> defaults to \"develop\""
+  echo "Creates a versions file with a line for each artifact:"
+  echo " <groupId>.<artifactId>	<version>"
+  echo "Usage: `basename $0` <output-file> [ <branch> [ <comment> ] ]"
+  echo " <branch> If \"current\", the currently checked out trees are used, else"
+  echo "          specifies the branch to checkout and pull.  Defaults to \"develop\"."
+  echo " <comment> Included in comment in first line.  Defaults to \"on <branch> branch\""
 }
 
-output=${1}
-branch=${2:-develop}
+output="${1}"
+branch="${2:-develop}"
+comment="${branch:-on ${2} branch}"
 
 if [ -z "${output}" ]; then
   usage
   exit 1
 fi
 
-foreach "git checkout ${branch} && git pull" || exit 1
-echo "# Artifact versions on ${branch} branch  `date`" >${output}
-echo >>${output}
-foreach "pom-artifact-version >>${output}" || exit 1
+if [ "${branch}" != "current" ]; then
+    foreach "git checkout ${branch} && git pull" || exit 1
+fi
+echo "# Artifact versions ${comment} `date`" >"${output}"
+echo >>"${output}"
+foreach "pom-artifact-version >>\"${output}\"" || exit 1
