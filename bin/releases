@@ -240,7 +240,7 @@ case "${1}" in
         git branch
         Exit "could not infer release branch"
       fi
-      git merge --squash -srecursive -Xtheirs "origin/${RELBRA}"
+      git merge --squash --strategy=ort --strategy-option=theirs "origin/${RELBRA}"
       if [ "$?" != "0" ] ; then
         git status
         echo "----- ENTERING SUBSHELL -----"
@@ -254,6 +254,12 @@ case "${1}" in
         fi 
       else
         git commit
+      fi
+      git diff --compact-summary "origin/${RELBRA}"
+      echo "Continue? (y/n)"
+      read __ANS
+      if [ "${__ANS}" != "y" ] ; then
+        Exit "stopping"
       fi
       # Compute Git tag and tag message
       TAG="version-${RELBRA#release-}"
