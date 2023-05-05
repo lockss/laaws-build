@@ -51,7 +51,6 @@ POSSIBILITY OF SUCH DAMAGE.
 <!--    <module>lockss-util/lockss-util-core</module>-->
 <!--    <module>lockss-util/lockss-util-entities</module>-->
 <!--    <module>lockss-util/lockss-util-rest</module>-->
-    <module>laaws-repository-core</module>
     <module>lockss-tdb-tools</module>
 <!--    <module>lockss-tdb-tools/lockss-tdb-processor</module>-->
 <!--    <module>lockss-tdb-tools/lockss-tdbxml-maven-plugin</module>-->
