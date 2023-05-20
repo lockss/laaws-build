@@ -37,6 +37,7 @@ LOCKSS_IMAGE_REPOS=(
   lockss/laaws-configuration-service
   lockss/laaws-repository-service
   lockss/laaws-soap-service
+  lockss/laaws-crawler-service
 )
 
 # Default Containerd CLI path
