@@ -29,11 +29,36 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+usage() {
+  echo "Usage: foreach [-c] <command ...>
+  echo "  Executes command for each module in the project.
+  echo "  Normally exits if command returns non-zero"
+  echo "  -c   Continue on non-zero status"
+}
+
+noerr=""
+
+while true ; do
+  case "$1" in
+    "-c" )
+      noerr=1
+      shift; continue;;
+    -* )
+      usage
+      exit 1
+  esac
+  break;
+done
+
 CMD=$@
 
 err_exit() {
-  echo "command exited w/ error, foreach exiting"
-  exit 1
+  if [ -z "${noerr}" ]; then
+    echo "command exited w/ error, foreach exiting"
+    exit 1
+  else
+    echo "command exited w/ error, continuing"
+  fi
 }
 
 for MOD in $(./bin/repos) ; do
