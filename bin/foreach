@@ -52,15 +52,22 @@ done
 
 CMD=$@
 
+errs=
 err_exit() {
+  local mod="$1"
   if [ -z "${noerr}" ]; then
-    echo "command exited w/ error, foreach exiting"
+    echo "Command exited w/ error, foreach exiting"
     exit 1
   else
-    echo "command exited w/ error, continuing"
+    echo "Command exited w/ error, continuing"
+    errs="${errs} ${mod}"
   fi
 }
 
 for MOD in $(./bin/repos) ; do
-  env MODULE=${MOD} /bin/sh -c "echo '-------- ${MOD} --------' && cd ${MOD} && ${CMD}" || err_exit
+  env MODULE=${MOD} /bin/sh -c "echo '-------- ${MOD} --------' && cd ${MOD} && ${CMD}" || err_exit ${MOD}
 done
+if [ -n "${errs}" ]; then
+  echo "Command failed in${errs}"
+  exit 1
+fi
