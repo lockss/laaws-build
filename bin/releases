@@ -156,7 +156,7 @@ case "${1}" in
         if [ -n "${PARSNAP}" ] ; then
           Set_Parent_Version "${PARSNAP}" "${PARVERS}"
         fi
-        git -P diff
+        git --no-pager diff
         git commit -am "Begin ${VERS} release" || Exit 'git commit -am failed'
         git checkout develop || Exit 'git checkout failed'
       ) || Exit "Exiting..."
