@@ -19,7 +19,7 @@ if [ -z "${output}" ]; then
 fi
 
 if [ "${branch}" != "current" ]; then
-    foreach "git checkout ${branch} && git pull" || exit 1
+    foreach "git checkout develop && git pull && git checkout ${branch}" || exit 1
 fi
 echo "# Artifact versions ${comment} `date`" >"${output}"
 echo >>"${output}"
