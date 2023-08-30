@@ -217,6 +217,23 @@ case "${1}" in
     done
     ;;
     
+  --emerge-release-branches)
+    for mod in . $("${_D0}/repos") ; do
+      if [ "${mod}" = '.' ] ; then
+        VERS2="$(Get_Version)"
+        RELBRA2="$(Release_Branch_Name "${VERS2}")"
+        continue
+      fi
+      (
+        cd "${mod}" || Exit "no such module: ${mod}"
+        VERS="$(Get_Version)"
+        RELBRA="$(Release_Branch_Name "${VERS}" "${mod}")"
+        git switch "${RELBRA}" || Exit 'git checkout failed'
+        git switch "${RELBRA2}" || Exit 'git checkout failed'
+      ) || Exit "Exiting..."
+    done
+    ;;
+    
   --reset-release-branch)
     RELBRA="$(git branch | grep --only-matching 'release-[0-9][^ ]\+')"
     if [ -z "${RELBRA}" ] ; then
@@ -230,7 +247,7 @@ case "${1}" in
   --merge-into-master)
     git checkout master || Exit 'git checkout master failed'
     git pull || Exit 'git pull failed'
-    for mod in $("${_D0}/repos") . ; do
+    for mod in $("${_D0}/repos") . ; do ###FIXME This uses the POM of master so it won't know about new submodules!
       if [ "${mod}" = '.' ] ; then
         RELBRA="$(git branch | grep --only-matching 'release-[0-9][^ ]\+')"
       else
