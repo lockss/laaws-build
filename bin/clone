@@ -29,7 +29,9 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-CMD=$@
+if [ -n "${1}" ] ; then
+  BRANCH_ARGS="--branch ${1}"
+fi
 for mod in $(./bin/repos) ; do
-  git clone git@github.com:lockss/${mod}
+  git clone ${BRANCH_ARGS} git@github.com:lockss/${mod}
 done
