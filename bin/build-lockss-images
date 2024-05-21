@@ -1,2 +1,2 @@
 #!/bin/sh
-mvn -DskipDockerBuild=false -DskipTests -DbuildingParent clean install
+mvn -DskipDockerBuild=false -DskipTests clean install
