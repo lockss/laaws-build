@@ -4,8 +4,8 @@
 
 case "$1" in
   -p | --push )
-    mvn deploy -P doSnapshot -DskipTests=true -DskipMavenCentral=true -DskipGpg=true -DskipJavadoc=true
+    mvn clean deploy -P doSnapshot -DskipTests=true -DskipMavenCentral=true -DskipGpg=true -DskipJavadoc=true $@
     break;;
   * )
-    mvn -DskipDockerBuild=false -DskipTests clean install
+    mvn -DskipDockerBuild=false -DskipTests clean install $@
 esac
