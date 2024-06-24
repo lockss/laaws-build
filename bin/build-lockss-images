@@ -2,8 +2,10 @@
 
 # build all projects and docker images.  with -p, pushes images to dockerhub
 
+
 case "$1" in
   -p | --push )
+    shift
     mvn clean deploy -P doSnapshot -DskipTests=true -DskipMavenCentral=true -DskipGpg=true -DskipJavadoc=true $@
     break;;
   * )
