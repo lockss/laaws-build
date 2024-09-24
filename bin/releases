@@ -6,6 +6,16 @@ _D0="$(cd "$(dirname "${0}")" && pwd)"
 : set -x
 
 #
+# Check_Master
+#
+Check_Master()
+{
+  if [ "$("${_D0}/get-git-branch")" != 'master' ]; then
+    Exit "Git tree is not in the master branch"
+  fi
+}
+
+#
 # Check_Develop
 #
 Check_Develop()
@@ -52,17 +62,25 @@ Get_Version()
 }
 
 #
-# New_Version
+# New_Develop_Version
 #
 # $1.$2.$3(.$4) = three (or four) part version
-New_Version()
+New_Develop_Version()
 {
-  __V="$(echo "${1}" | sed -e 's@\.@ @g')"
   if [ -z "${4}" ]; then
     echo "${1}.$(expr "${2}" + 1).0"
   else
     echo "${1}.${2}.$(expr "${3}" + 1).0"
   fi
+}
+
+#
+# New_Hotfix_Version
+#
+# $1.$2.$3(.$4) = three (or four) part version
+New_Hotfix_Version()
+{
+  echo "${1}.${2}.$(expr "${3}" + 1)"
 }
 
 #
@@ -81,6 +99,19 @@ Old_Version()
 Release_Branch_Name()
 {
   __RELBRANCH='release'
+  if [ -n "${2}" ] && [ "${2}" != '.' ] ; then
+    __RELBRANCH="${__RELBRANCH}-${2}"
+  fi
+  __RELBRANCH="${__RELBRANCH}-${1}"
+  echo "${__RELBRANCH}"
+}
+
+# Hotfix_Branch_name
+#
+# $1=vers $2=optmod
+Hotfix_Branch_Name()
+{
+  __RELBRANCH='hotfix'
   if [ -n "${2}" ] && [ "${2}" != '.' ] ; then
     __RELBRANCH="${__RELBRANCH}-${2}"
   fi
@@ -139,6 +170,31 @@ case "${1}" in
     done
     ;;
 
+  --create-hotfix-branches)
+       Check_Master
+       Check_Dirty
+
+       # Check if this project is in the list of projects we want to create
+       # hotfix branches for:
+
+       PROJ_NAME="$(basename "$(realpath .)")"
+       if ! echo "${2}" | grep -q "${PROJ_NAME}" ; then
+         echo "Skipping hotfix branch creation for ${PROJ_NAME}"
+         return 0
+       fi
+
+       for mod in $("${_D0}/repos") . ; do
+         (
+           cd "${mod}" || Exit "no such module: ${mod}"
+           VERS="$(Get_Version)"
+           VERS="$(New_Hotfix_Version "${VERS}")"
+           RELBRA="$(Hotfix_Branch_Name "${VERS}" "${mod}")"
+           git checkout -b "${RELBRA}" || Exit 'git checkout -b failed'
+           git push -u origin "${RELBRA}" || Exit 'git push -u failed'
+         ) || Exit "Exiting..."
+       done
+    ;;
+
   --update-release-versions)
     Check_Develop
     Check_Dirty
@@ -171,11 +227,11 @@ case "${1}" in
         cd "${mod}" || Exit "no such module: ${mod}"
         SNAP="$(Get_Version)"
         VERS="${SNAP%-SNAPSHOT}"
-        VERS2="$(New_Version $(echo "${VERS}" | sed -e 's@\.@ @g'))-SNAPSHOT"
+        VERS2="$(New_Develop_Version $(echo "${VERS}" | sed -e 's@\.@ @g'))-SNAPSHOT"
         Set_Version "${SNAP}" "${VERS2}"
         PARSNAP="$(Get_Parent_Version)"
         PARVERS="${PARSNAP%-SNAPSHOT}"
-        PARVERS2="$(New_Version $(echo "${PARVERS}" | sed -e 's@\.@ @g'))-SNAPSHOT"
+        PARVERS2="$(New_Develop_Version $(echo "${PARVERS}" | sed -e 's@\.@ @g'))-SNAPSHOT"
         if [ -n "${PARSNAP}" ] ; then
           Set_Parent_Version "${PARSNAP}" "${PARVERS2}"
         fi
@@ -331,6 +387,7 @@ case "${1}" in
       fi
     done
     ;;
+
     
   *)
     Exit "unexpected argument: ${1}"
