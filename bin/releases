@@ -294,7 +294,21 @@ case "${1}" in
       git merge --commit -m "Synthesizing ${RELBRA}" "${RELBRA}" || Exit "error merging ${RELBRA}"
     done
     ;;
-    
+
+   --synthesize-hotfix-branch)
+     for mod in $("${_D0}/repos") . ; do
+       if [ "${mod}" = '.' ] ; then
+         break
+       fi
+       RELBRA="$(git branch | grep --only-matching "hotfix-${mod}-[^ ]\+")"
+       if [ -z "${RELBRA}" ] ; then
+         git branch
+         Exit "could not infer hotfix branch"
+       fi
+       git merge --commit -m "Synthesizing ${RELBRA}" "${RELBRA}" || Exit "error merging ${RELBRA}"
+     done
+     ;;
+
   --emerge-release-branches)
     for mod in . $("${_D0}/repos") ; do
       if [ "${mod}" = '.' ] ; then
