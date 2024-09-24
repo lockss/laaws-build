@@ -263,6 +263,15 @@ case "${1}" in
     git checkout "${RELBRA}" || Exit "error switching to ${RELBRA}"
     ;;
 
+  --checkout-hotfix-branch)
+    RELBRA="$(git branch | grep --only-matching 'hotfix-[0-9][^ ]\+')"
+    if [ -z "${RELBRA}" ] ; then
+      git branch
+      Exit "could not infer hotfix branch"
+    fi
+    git checkout "${RELBRA}" || Exit "error switching to ${RELBRA}"
+    ;;
+
   --checkout-previous-release-branch)
     Check_Develop
     SNAP="$(Get_Version)"
