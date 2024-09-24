@@ -171,6 +171,9 @@ case "${1}" in
     ;;
 
   --create-hotfix-branches)
+       [ -n "${2}" ] && Exit "The second argument should be a comma-separated list of directories"
+       [ -n "${3}" ] && Exit "The third argument should be the hotfix version of lockss-parent-pom"
+
        Check_Master
        Check_Dirty
 
@@ -186,10 +189,20 @@ case "${1}" in
        for mod in $("${_D0}/repos") . ; do
          (
            cd "${mod}" || Exit "no such module: ${mod}"
-           VERS="$(Get_Version)"
-           VERS="$(New_Hotfix_Version "${VERS}")"
-           RELBRA="$(Hotfix_Branch_Name "${VERS}" "${mod}")"
+           VERS_FROM="$(Get_Version)"
+           VERS_TO="$(New_Hotfix_Version "$(echo "${VERS_FROM}" | sed -e 's@\.@ @g')")"
+           RELBRA="$(Hotfix_Branch_Name "${VERS_TO}" "${mod}")"
            git checkout -b "${RELBRA}" || Exit 'git checkout -b failed'
+
+           Set_Version "${VERS_FROM}" "${VERS_TO}"
+           PARENT_FROM="$(Get_Parent_Version)"
+           PARENT_TO="${3}"
+           if [ -n "${PARENT_FROM}" ] ; then
+             Set_Parent_Version "${PARENT_FROM}" "${PARENT_TO}"
+           fi
+           git --no-pager diff
+           git commit -am "Begin ${VERS_TO} hotfix" || Exit 'git commit -am failed'
+
            git push -u origin "${RELBRA}" || Exit 'git push -u failed'
          ) || Exit "Exiting..."
        done
