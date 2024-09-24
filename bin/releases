@@ -190,7 +190,7 @@ case "${1}" in
          (
            cd "${mod}" || Exit "no such module: ${mod}"
            VERS_FROM="$(Get_Version)"
-           VERS_TO="$(New_Hotfix_Version "$(echo "${VERS_FROM}" | sed -e 's@\.@ @g')")"
+           VERS_TO="$(New_Hotfix_Version $(echo "${VERS_FROM}" | sed -e 's@\.@ @g'))"
            RELBRA="$(Hotfix_Branch_Name "${VERS_TO}" "${mod}")"
            git checkout -b "${RELBRA}" || Exit 'git checkout -b failed'
 
