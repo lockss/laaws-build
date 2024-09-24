@@ -171,8 +171,8 @@ case "${1}" in
     ;;
 
   --create-hotfix-branches)
-       [ -n "${2}" ] && Exit "The second argument should be a comma-separated list of directories"
-       [ -n "${3}" ] && Exit "The third argument should be the hotfix version of lockss-parent-pom"
+       [ -n "${2}" ] || Exit "The second argument should be a comma-separated list of directories"
+       [ -n "${3}" ] || Exit "The third argument should be the hotfix version of lockss-parent-pom"
 
        Check_Master
        Check_Dirty
