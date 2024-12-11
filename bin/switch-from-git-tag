@@ -29,4 +29,4 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 TAG="${1}"
-git switch `git branch -r --contains "tags/${TAG}" --format='%(refname:short)' | sed -e 's:^origin/::'` && git pull
+git switch `git branch -r --contains "tags/${TAG}" --format='%(refname:short)' | grep -v 'origin/HEAD' | sed -e 's:^origin/::'` && git pull
