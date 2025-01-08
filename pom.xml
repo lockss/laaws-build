@@ -67,7 +67,6 @@ POSSIBILITY OF SUCH DAMAGE.
     <module>laaws-poller</module>
     <module>laaws-crawler-service</module>
     <module>laaws-metadataextractor-common</module>
-    <module>laaws-metadataextractor</module>
     <module>laaws-metadataservice</module>
     <module>laaws-soap-service</module>
   </modules>
