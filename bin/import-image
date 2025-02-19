@@ -33,7 +33,6 @@
 LOCKSS_IMAGE_REPOS=(
   lockss/laaws-poller
   lockss/laaws-metadata-service
-  lockss/laaws-metadata-extraction-service
   lockss/laaws-configuration-service
   lockss/laaws-repository-service
   lockss/laaws-soap-service
