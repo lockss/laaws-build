@@ -1,8 +1,9 @@
-# Introduction
+# LOCKSS 2.0 BUILD SCRIPTS
 
-Thib's little POM-based LAAWS build tool.
+This project offers a collection of scripts and maven pom to allow for the build and release of LOCKSS 2.0
 
-**This project is not intended for public consumption.**
+## Note on branches
+The `develop` branch should be used for current build and is for ongoing development.
 
 # Usage
 
