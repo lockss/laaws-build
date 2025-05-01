@@ -49,6 +49,7 @@ usage() {
   echo "  import. If the image repo is specified without a tag, then the images"
   echo "  of all tags within that repo are imported."
   echo
+  echo "  --krb5          Use Kerberos for SSH client authentication"
   echo "  --lockss        Import all LOCKSS service images"
   echo "  -r user@host    Import over an SSH pipe to remote Containerd instance"
   echo "  -c ctr          Path to Containerd CLI (default: k3s ctr)"
@@ -70,9 +71,15 @@ import_image() {
 
 declare -a images
 declare remote_host
+declare ssh_opts
 
 while true; do
   case "$1" in
+  "--krb5" )
+    ssh_opts="-K"
+    shift
+    continue
+    ;;
   "--lockss" )
     # May append more than once but we later process
     # the array on its unique elements
@@ -111,7 +118,7 @@ done
 
 # Prefix CTR_CLI with SSH pipe if remote host was specified
 if [ ! -z $remote_host ]; then
-  CTR_CLI="ssh $remote_host $CTR_CLI"
+  CTR_CLI="ssh $ssh_opts $remote_host $CTR_CLI"
 fi
 
 # Generate array of unique images to avoid re-importing
