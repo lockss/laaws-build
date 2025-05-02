@@ -68,6 +68,7 @@ for MOD in $(./bin/repos) ; do
   env MODULE=${MOD} /bin/sh -c "echo '-------- ${MOD} --------' && cd ${MOD} && ${CMD}" || err_exit ${MOD}
 done
 if [ -n "${errs}" ]; then
-  echo "Command failed in${errs}"
+  printf "\nCommand failed in:\n"
+  echo ${errs} | tr ' ' '\n' | column -c "$(tput cols)"
   exit 1
 fi
