@@ -6,7 +6,7 @@ This project brings together Git repositories, Maven infrastructure and scripts 
 
 *   Java Development Kit (JDK) 17
 *   [Apache Maven](https://maven.apache.org/) 3.9
-*   [yq](https://github.com/mikefarah/yq) version 4
+*   [yq](https://github.com/mikefarah/yq) version 4.48 or greater
     *   Fedora Linux 42/41/Rawhide, OpenSUSE Leap 15.6/Tumbleweed: the `yq` OS package
     *   Arch Linux: the `go-yq` OS package
     *   AlmaLinux OS/CentOS Stream/RHEL/Rocky Linux 9/10: the `yq` [EPEL](https://docs.fedoraproject.org/en-US/epel/) package
