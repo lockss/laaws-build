@@ -304,8 +304,9 @@ cxf-rt-transports-http = { module = "org.apache.cxf:cxf-rt-transports-http", ver
 cxf-rt-transports-http-jetty = { module = "org.apache.cxf:cxf-rt-transports-http-jetty", version = "3.3.5" }
 cxf-rt-frontend-jaxrs = { module = "org.apache.cxf:cxf-rt-frontend-jaxrs", version = "3.3.5" }
 cxf-rt-ext-logging = { module = "org.apache.cxf:cxf-rt-features-logging", version = "3.3.5" }
-# CXF 4.x for jakarta namespace (unused - kept for reference)
+# CXF 4.x for jakarta namespace
 cxf-jakarta-rt-frontend-jaxws = { module = "org.apache.cxf:cxf-rt-frontend-jaxws", version = "4.0.4" }
+cxf-jakarta-rt-frontend-jaxrs = { module = "org.apache.cxf:cxf-rt-frontend-jaxrs", version = "4.0.4" }
 cxf-jakarta-rt-transports-http = { module = "org.apache.cxf:cxf-rt-transports-http", version = "4.0.4" }
 cxf-jakarta-rt-ext-logging = { module = "org.apache.cxf:cxf-rt-features-logging", version = "4.0.4" }
 
