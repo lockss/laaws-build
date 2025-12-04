@@ -1,0 +1,451 @@
+# LOCKSS Dependency Version Catalog
+# This file centralizes all dependency versions for the LAAWS build
+# Migrated from lockss-parent-pom
+
+[versions]
+# Java version
+java = "17"
+
+# Build release name (matches classic lockss-daemon)
+releasename = "2.0.90-beta2"
+
+# Plugin versions
+spotbugs = "4.9.3"
+swagger-codegen = "3.0.52"
+
+# Grouped versions
+activemq = "5.18.3"
+antlr = "4.9.3"
+bouncycastle = "1.80"
+derby = "10.14.2.0"
+flyway = "5.2.4"
+hadoop = "3.3.1"
+hamcrest = "1.3"
+httpclient = "4.5.3"
+icu4j = "76.1"
+jackson = "2.16.1"
+jooq = "3.14.15"
+junit4 = "4.13.2"
+junit5-jupiter = "5.10.2"
+junit5-platform = "1.10.2"
+log4j = "2.24.1"
+maven = "3.9.0"
+mapstruct-jdk8 = "1.2.0.Final"
+mockserver = "5.15.0"
+pdfbox = "1.8.17"
+solr = "8.11.2"
+slf4j = "1.7.36"
+spring = "6.1.3"
+spring-boot = "3.2.2"
+truezip = "7.7.10"
+xoai = "4.2.0"
+graalvm = "23.1.2"
+
+# Dependency versions
+activation = "1.1.1"
+ant-contrib = "20020829"
+castor = "0.9.4.2"
+commons-beanutils = "1.11.0"
+commons-cli = "1.9.0"
+commons-codec = "1.18.0"
+commons-collections = "3.2.2"
+commons-collections4 = "4.5.0"
+commons-compress = "1.27.1"
+commons-configuration = "1.10"
+commons-csv = "1.14.0"
+commons-dbcp2 = "2.13.0"
+commons-digester = "1.8.1"
+commons-fileupload = "1.5"
+commons-io = "2.19.0"
+commons-jxpath = "1.4.0"
+commons-lang = "2.6"
+commons-lang3 = "3.17.0"
+commons-logging = "1.2"
+commons-primitives = "1.0"
+commons-text = "1.13.1"
+commons-validator = "1.9.0"
+h2 = "2.3.232"
+httpcore = "4.4.6"
+javax-mail = "1.6.2"
+jbibtex = "1.0.20"
+jonix = "2025-04"
+json-path = "2.9.0"
+json-smart = "2.5.0"
+jsonassert = "1.5.0"
+jsoup = "1.20.1"
+marc4j = "2.9.6"
+mysql-connector-j = "9.3.0"
+postgresql = "42.7.7"
+springdoc = "2.3.0"
+webarchive-commons = "1.1.8"
+xmlunit = "1.6"
+
+# LOCKSS project versions
+lockss-configuration-service = "2.10.0-SNAPSHOT"
+lockss-core = "2.10.0-SNAPSHOT"
+lockss-junit4-bundle = "1.9.0-SNAPSHOT"
+lockss-junit5-bundle = "1.9.0-SNAPSHOT"
+lockss-metadata-extraction-service = "2.9.0-SNAPSHOT"
+lockss-metadataextractor-common = "2.11.0-SNAPSHOT"
+lockss-metadata-service = "2.8.0-SNAPSHOT"
+lockss-poller = "2.8.0-SNAPSHOT"
+lockss-plugin-compat = "1.7.0-SNAPSHOT"
+lockss-plugins = "20180327"
+lockss-plugins-archetype = "1.5.0-SNAPSHOT"
+lockss-repository-tools = "2.14.0-SNAPSHOT"
+lockss-repository-service = "2.16.0-SNAPSHOT"
+lockss-spring-bundle = "2.16.0-SNAPSHOT"
+lockss-tdb-processor = "1.9.0-SNAPSHOT"
+lockss-tdbxml-plugin = "1.10.0-SNAPSHOT"
+lockss-util-core = "1.15.0-SNAPSHOT"
+lockss-util-entities = "1.7.0-SNAPSHOT"
+lockss-util-rest = "1.7.0-SNAPSHOT"
+
+# Docker versions
+docker-lockss-spring = "2.12.0-SNAPSHOT"
+
+[libraries]
+# Log4j
+log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
+log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+log4j-web = { module = "org.apache.logging.log4j:log4j-web", version.ref = "log4j" }
+log4j-slf4j-impl = { module = "org.apache.logging.log4j:log4j-slf4j-impl", version.ref = "log4j" }
+log4j-v12-api = { module = "org.apache.logging.log4j:log4j-1.2-api", version.ref = "log4j" }
+log4j-jcl = { module = "org.apache.logging.log4j:log4j-jcl", version.ref = "log4j" }
+log4j-jul = { module = "org.apache.logging.log4j:log4j-jul", version.ref = "log4j" }
+
+# SLF4J
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+
+# Commons
+commons-collections4 = { module = "org.apache.commons:commons-collections4", version.ref = "commons-collections4" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang3" }
+commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress" }
+commons-codec = { module = "commons-codec:commons-codec", version.ref = "commons-codec" }
+commons-cli = { module = "commons-cli:commons-cli", version.ref = "commons-cli" }
+commons-collections = { module = "commons-collections:commons-collections", version.ref = "commons-collections" }
+commons-configuration = { module = "commons-configuration:commons-configuration", version.ref = "commons-configuration" }
+commons-logging = { module = "commons-logging:commons-logging", version.ref = "commons-logging" }
+commons-beanutils = { module = "commons-beanutils:commons-beanutils", version.ref = "commons-beanutils" }
+commons-validator = { module = "commons-validator:commons-validator", version.ref = "commons-validator" }
+commons-dbcp2 = { module = "org.apache.commons:commons-dbcp2", version.ref = "commons-dbcp2" }
+commons-text = { module = "org.apache.commons:commons-text", version.ref = "commons-text" }
+commons-lang = { module = "commons-lang:commons-lang", version.ref = "commons-lang" }
+commons-primitives = { module = "commons-primitives:commons-primitives", version.ref = "commons-primitives" }
+commons-jxpath = { module = "commons-jxpath:commons-jxpath", version.ref = "commons-jxpath" }
+commons-digester = { module = "commons-digester:commons-digester", version.ref = "commons-digester" }
+commons-fileupload = { module = "commons-fileupload:commons-fileupload", version.ref = "commons-fileupload" }
+commons-csv = { module = "org.apache.commons:commons-csv", version.ref = "commons-csv" }
+
+# JUnit 4
+junit4 = { module = "junit:junit", version.ref = "junit4" }
+
+# JUnit 5
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit5-jupiter" }
+junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit5-jupiter" }
+junit-platform-commons = { module = "org.junit.platform:junit-platform-commons", version.ref = "junit5-platform" }
+
+# Hamcrest
+hamcrest-library = { module = "org.hamcrest:hamcrest-library", version.ref = "hamcrest" }
+hamcrest-all = { module = "org.hamcrest:hamcrest-all", version.ref = "hamcrest" }
+
+# Jackson
+jackson-core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
+jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
+
+# Spring Boot
+spring-boot-starter-parent = { module = "org.springframework.boot:spring-boot-starter-parent", version.ref = "spring-boot" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+spring-boot-starter-tomcat = { module = "org.springframework.boot:spring-boot-starter-tomcat", version.ref = "spring-boot" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
+spring-boot-starter-activemq = { module = "org.springframework.boot:spring-boot-starter-activemq", version.ref = "spring-boot" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+
+# Spring Framework 6.x (jakarta namespace)
+spring-core = { module = "org.springframework:spring-core", version.ref = "spring" }
+spring-web = { module = "org.springframework:spring-web", version.ref = "spring" }
+spring-webmvc = { module = "org.springframework:spring-webmvc", version.ref = "spring" }
+spring-test = { module = "org.springframework:spring-test", version.ref = "spring" }
+spring-boot = { module = "org.springframework.boot:spring-boot", version.ref = "spring-boot" }
+
+# Spring Framework 5.x (javax namespace - for legacy lockss-core compatibility)
+spring5-web = { module = "org.springframework:spring-web", version = "5.3.31" }
+
+# Derby
+derby = { module = "org.apache.derby:derby", version.ref = "derby" }
+derbyclient = { module = "org.apache.derby:derbyclient", version.ref = "derby" }
+derbynet = { module = "org.apache.derby:derbynet", version.ref = "derby" }
+
+# Databases
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+mysql-connector-j = { module = "com.mysql:mysql-connector-j", version.ref = "mysql-connector-j" }
+h2 = { module = "com.h2database:h2", version.ref = "h2" }
+
+# HTTP
+httpcore = { module = "org.apache.httpcomponents:httpcore", version.ref = "httpcore" }
+httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "httpclient" }
+httpclient-cache = { module = "org.apache.httpcomponents:httpclient-cache", version.ref = "httpclient" }
+httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", version = "5.3" }
+
+# Bouncycastle
+bcprov-jdk18on = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncycastle" }
+bcutil-jdk18on = { module = "org.bouncycastle:bcutil-jdk18on", version.ref = "bouncycastle" }
+bcpkix-jdk18on = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
+bcmail-jdk18on = { module = "org.bouncycastle:bcmail-jdk18on", version.ref = "bouncycastle" }
+
+# ICU
+icu4j = { module = "com.ibm.icu:icu4j", version.ref = "icu4j" }
+icu4j-charset = { module = "com.ibm.icu:icu4j-charset", version.ref = "icu4j" }
+icu4j-localespi = { module = "com.ibm.icu:icu4j-localespi", version.ref = "icu4j" }
+
+# GraalVM
+graalvm-polyglot = { module = "org.graalvm.polyglot:polyglot", version.ref = "graalvm" }
+graalvm-js-scriptengine = { module = "org.graalvm.js:js-scriptengine", version.ref = "graalvm" }
+graalvm-js-community = { module = "org.graalvm.polyglot:js-community", version.ref = "graalvm" }
+
+# Truezip
+truezip-driver-file = { module = "de.schlichtherle.truezip:truezip-driver-file", version.ref = "truezip" }
+truezip-driver-tar = { module = "de.schlichtherle.truezip:truezip-driver-tar", version.ref = "truezip" }
+truezip-driver-zip = { module = "de.schlichtherle.truezip:truezip-driver-zip", version.ref = "truezip" }
+truezip-file = { module = "de.schlichtherle.truezip:truezip-file", version.ref = "truezip" }
+truezip-kernel = { module = "de.schlichtherle.truezip:truezip-kernel", version.ref = "truezip" }
+truezip-swing = { module = "de.schlichtherle.truezip:truezip-swing", version.ref = "truezip" }
+
+# ActiveMQ
+activemq-client = { module = "org.apache.activemq:activemq-client", version.ref = "activemq" }
+activemq-broker = { module = "org.apache.activemq:activemq-broker", version.ref = "activemq" }
+activemq-kahadb-store = { module = "org.apache.activemq:activemq-kahadb-store", version.ref = "activemq" }
+
+# Solr
+solr-solrj = { module = "org.apache.solr:solr-solrj", version.ref = "solr" }
+solr-core = { module = "org.apache.solr:solr-core", version.ref = "solr" }
+solr-test-framework = { module = "org.apache.solr:solr-test-framework", version.ref = "solr" }
+
+# MockServer
+mockserver-netty = { module = "org.mock-server:mockserver-netty", version.ref = "mockserver" }
+mockserver-junit-rule = { module = "org.mock-server:mockserver-junit-rule", version.ref = "mockserver" }
+mockserver-spring-test-listener = { module = "org.mock-server:mockserver-spring-test-listener", version.ref = "mockserver" }
+mockserver-junit-jupiter-no-dependencies = { module = "org.mock-server:mockserver-junit-jupiter-no-dependencies", version.ref = "mockserver" }
+
+# XOAI
+xoai-common = { module = "org.dspace:xoai-common", version.ref = "xoai" }
+
+# XML
+xerces = { module = "xerces:xercesImpl", version = "2.12.2" }
+xml-apis = { module = "xml-apis:xml-apis", version = "1.4.01" }
+xalan = { module = "xalan:xalan", version = "2.7.3" }
+xalan-serializer = { module = "xalan:serializer", version = "2.7.3" }
+xml-resolver = { module = "xml-resolver:xml-resolver", version = "1.2" }
+xmlschema-core = { module = "org.apache.ws.xmlschema:xmlschema-core", version = "2.2.1" }
+xmlsec = { module = "org.apache.santuario:xmlsec", version = "2.1.7" }
+
+# JSoup
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+
+# Mockito
+mockito-core = { module = "org.mockito:mockito-core", version = "2.22.0" }
+
+# PDFBox
+pdfbox = { module = "org.apache.pdfbox:pdfbox", version.ref = "pdfbox" }
+
+# JSON
+json-path = { module = "com.jayway.jsonpath:json-path", version.ref = "json-path" }
+json-smart = { module = "net.minidev:json-smart", version.ref = "json-smart" }
+jsonassert = { module = "org.skyscreamer:jsonassert", version.ref = "jsonassert" }
+json-org = { module = "org.json:json", version = "20231013" }
+
+# JAX-WS API
+javax-jws-api = { module = "javax.jws:javax.jws-api", version = "1.1" }
+jaxws-api = { module = "javax.xml.ws:jaxws-api", version = "2.3.1" }
+
+# JAX-RS API
+javax-ws-rs-api = { module = "javax.ws.rs:javax.ws.rs-api", version = "2.1.1" }
+
+# JMS
+javax-jms-api = { module = "javax.jms:javax.jms-api", version = "2.0.1" }
+
+# JavaMail
+javax-mail = { module = "com.sun.mail:javax.mail", version.ref = "javax-mail" }
+
+# Validation
+javax-validation-api = { module = "javax.validation:validation-api", version = "2.0.1.Final" }
+
+# Swagger
+swagger-annotations-v1 = { module = "io.swagger:swagger-annotations", version = "1.5.10" }
+swagger-annotations-v3 = { module = "io.swagger.core.v3:swagger-annotations", version = "2.2.16" }
+
+# Guava
+guava = { module = "com.google.guava:guava", version = "31.1-jre" }
+
+# Kubernetes
+kubernetes-client-java = { module = "io.kubernetes:client-java", version = "22.0.0" }
+
+# Rhino
+rhino = { module = "org.mozilla:rhino", version = "1.7.14" }
+
+# Castor
+castor = { module = "castor:castor", version.ref = "castor" }
+
+# Activation
+javax-activation = { module = "javax.activation:activation", version.ref = "activation" }
+
+# Servlet
+javax-servlet-api = { module = "javax.servlet:javax.servlet-api", version = "4.0.1" }
+jakarta-servlet-api = { module = "jakarta.servlet:jakarta.servlet-api", version = "6.0.0" }
+
+# CXF 3.x for javax namespace (used by lockss-core and Spring Boot 2.7.x)
+cxf-core = { module = "org.apache.cxf:cxf-core", version = "3.3.5" }
+cxf-rt-frontend-jaxws = { module = "org.apache.cxf:cxf-rt-frontend-jaxws", version = "3.3.5" }
+cxf-rt-transports-http = { module = "org.apache.cxf:cxf-rt-transports-http", version = "3.3.5" }
+cxf-rt-transports-http-jetty = { module = "org.apache.cxf:cxf-rt-transports-http-jetty", version = "3.3.5" }
+cxf-rt-frontend-jaxrs = { module = "org.apache.cxf:cxf-rt-frontend-jaxrs", version = "3.3.5" }
+cxf-rt-ext-logging = { module = "org.apache.cxf:cxf-rt-features-logging", version = "3.3.5" }
+# CXF 4.x for jakarta namespace (unused - kept for reference)
+cxf-jakarta-rt-frontend-jaxws = { module = "org.apache.cxf:cxf-rt-frontend-jaxws", version = "4.0.4" }
+cxf-jakarta-rt-transports-http = { module = "org.apache.cxf:cxf-rt-transports-http", version = "4.0.4" }
+cxf-jakarta-rt-ext-logging = { module = "org.apache.cxf:cxf-rt-features-logging", version = "4.0.4" }
+
+# Jetty
+jetty-util = { module = "org.eclipse.jetty:jetty-util", version = "9.4.49.v20220914" }
+jetty-io = { module = "org.eclipse.jetty:jetty-io", version = "9.4.49.v20220914" }
+jetty-http = { module = "org.eclipse.jetty:jetty-http", version = "9.4.52.v20230823" }
+
+# XStream
+xstream = { module = "com.thoughtworks.xstream:xstream", version = "1.4.21" }
+
+# Velocity
+velocity = { module = "org.apache.velocity:velocity", version = "1.7" }
+
+# Webarchive
+webarchive-commons = { module = "org.netpreserve.commons:webarchive-commons", version.ref = "webarchive-commons" }
+jwat-warc = { module = "org.jwat:jwat-warc", version = "1.2.0" }
+
+# FastInfoset
+fastinfoset = { module = "com.sun.xml.fastinfoset:FastInfoset", version = "1.2.13" }
+
+# Mimepull
+mimepull = { module = "org.jvnet.mimepull:mimepull", version = "1.9.7" }
+
+# WSDL
+wsdl4j = { module = "wsdl4j:wsdl4j", version = "1.6.3" }
+
+# Neethi
+neethi = { module = "org.apache.neethi:neethi", version = "3.0.3" }
+
+# IPAddress
+ipaddress = { module = "com.github.seancfoley:ipaddress", version = "5.5.1" }
+
+# AOP
+aopalliance = { module = "aopalliance:aopalliance", version = "1.0" }
+
+# ASM
+asm = { module = "asm:asm", version = "3.3.1" }
+asm-tree = { module = "asm:asm-tree", version = "3.3.1" }
+
+# AspectJ
+aspectjrt = { module = "org.aspectj:aspectjrt", version = "1.8.10" }
+
+# OWASP
+esapi = { module = "org.owasp.esapi:esapi", version = "2.3.0.0" }
+
+# OpenSAML
+opensaml = { module = "org.opensaml:opensaml", version = "2.6.4" }
+xmltooling = { module = "org.opensaml:xmltooling", version = "1.4.4" }
+
+# NekoHTML
+nekohtml = { module = "net.sourceforge.nekohtml:nekohtml", version = "1.9.22" }
+
+# Ziplet
+ziplet = { module = "com.github.ziplet:ziplet", version = "2.4.1" }
+
+# JCabi
+jcabi-aspects = { module = "com.jcabi:jcabi-aspects", version = "0.22.6" }
+
+# JRugged
+jrugged-core = { module = "org.fishwife:jrugged-core", version = "3.2.2" }
+
+# Joda Time
+joda-time = { module = "joda-time:joda-time", version = "2.13.0" }
+
+# Oro
+oro = { module = "oro:oro", version = "2.0.8" }
+
+# Concurrent
+concurrent = { module = "concurrent:concurrent", version = "1.3.4" }
+
+# Javatar
+javatar = { module = "javatar:javatar", version = "2.5" }
+
+# Gettext
+gettext-commons = { module = "com.googlecode.gettext-commons:gettext-commons", version = "0.9.8" }
+ant-gettext = { module = "org.fedorahosted.tennera:ant-gettext", version = "0.9" }
+
+# Ant-Contrib
+ant-contrib = { module = "ant-contrib:ant-contrib", version = "1.0b3" }
+
+# SchemaSpy
+schemaspy = { module = "net.sourceforge.schemaspy:schemaspy", version = "5.0.0" }
+
+# Marc4j
+marc4j = { module = "org.marc4j:marc4j", version.ref = "marc4j" }
+
+# Jonix
+jonix = { module = "com.tectonica:jonix", version.ref = "jonix" }
+
+# JBibTeX
+jbibtex = { module = "org.jbibtex:jbibtex", version.ref = "jbibtex" }
+
+# Lucene
+lucene-analyzers-common = { module = "org.apache.lucene:lucene-analyzers-common", version = "8.9.0" }
+
+# Lyncode Test Support
+lyncode-test-support = { module = "com.lyncode:test-support", version = "1.0.4" }
+
+# Stax2
+stax2-api = { module = "org.codehaus.woodstox:stax2-api", version = "3.0.4" }
+
+# Fastutil
+fastutil = { module = "it.unimi.dsi:fastutil", version = "6.3" }
+
+# HttpUnit
+httpunit = { module = "org.httpunit:httpunit", version = "1.7.3" }
+
+# XMLUnit
+xmlunit-core = { module = "xmlunit:xmlunit", version.ref = "xmlunit" }
+
+# Embedded Postgres
+embedded-postgres = { module = "io.zonky.test:embedded-postgres", version = "2.0.6" }
+
+# Springdoc
+springdoc-openapi-starter-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+
+# LOCKSS Legacy JARs
+lockss-legacy-org-htmlparser = { module = "org.lockss.legacy:org-htmlparser", version = "1.6-p2" }
+lockss-legacy-com-sun-jimi-pro = { module = "org.lockss.legacy:com-sun-jimi-pro", version = "1.0.0-p1" }
+lockss-legacy-edu-stanford-db-rdf-api = { module = "org.lockss.legacy:edu-stanford-db-rdf-api", version = "2001-01-19-p1" }
+lockss-legacy-org-josql = { module = "org.lockss.legacy:org-josql", version = "2.2-p2" }
+lockss-legacy-com-gentlyweb-utils = { module = "org.lockss.legacy:com-gentlyweb-utils", version = "1.1-p1" }
+lockss-legacy-dk-digst-oiosaml-java = { module = "org.lockss.legacy:dk-digst-oiosaml-java", version = "21188-p2" }
+lockss-legacy-org-mortbay-jetty = { module = "org.lockss.legacy:org-mortbay-jetty", version = "5.1.5-p4" }
+lockss-legacy-org-netpreserve-commons-webarchive-commons = { module = "org.lockss.legacy:org-netpreserve-commons-webarchive-commons", version = "1.1.7-p2" }
+lockss-pdfbox = { module = "org.lockss:pdfbox", version = "0.7.3-p1" }
+lockss-xoai-service-provider = { module = "org.lockss:org-dspace-xoai-service-provider", version = "4.2.0-p1" }
+
+[bundles]
+log4j = ["log4j-api", "log4j-core", "log4j-web", "log4j-slf4j-impl", "log4j-v12-api", "log4j-jcl", "log4j-jul"]
+junit5 = ["junit-jupiter-engine", "junit-jupiter-params", "hamcrest-library"]
+bouncycastle = ["bcprov-jdk18on", "bcutil-jdk18on", "bcpkix-jdk18on", "bcmail-jdk18on"]
+icu4j = ["icu4j", "icu4j-charset", "icu4j-localespi"]
+truezip = ["truezip-driver-file", "truezip-driver-tar", "truezip-driver-zip", "truezip-file", "truezip-kernel", "truezip-swing"]
+derby = ["derby", "derbyclient", "derbynet"]
+activemq = ["activemq-client", "activemq-broker"]
+graalvm = ["graalvm-polyglot", "graalvm-js-scriptengine"]
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.4" }
+spotbugs = { id = "com.github.spotbugs", version = "6.0.7" }
