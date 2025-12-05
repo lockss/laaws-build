@@ -54,6 +54,14 @@ tasks.withType<Test>().configureEach {
     systemProperty("org.lockss.defaultLogLevel", "info")
 }
 
+// Exclude Spring Boot's default logging to use LOCKSS's Log4J2 configuration.
+// The log4j-to-slf4j bridge causes ClassCastException: SLF4JLogger cannot be cast to L4JLogger.
+configurations.all {
+    exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+    exclude(group = "ch.qos.logback", module = "logback-classic")
+    exclude(group = "org.apache.logging.log4j", module = "log4j-to-slf4j")
+}
+
 // Add generated sources to the main source set
 sourceSets {
     main {
