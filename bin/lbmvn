@@ -1,0 +1,15 @@
+#! /bin/sh
+
+# A teeny tiny convenience to install lockss-parent-pom then build the
+# laaws-build reactor.  Often needed after changes to the parent POM
+# as the reactor build doesn't pick up changes to parent pom in a
+# single run.
+
+# First does mvn install of lockss-parent-pom. then runs mvn with
+# whatever arguments are supplied.  E.g.,
+# lbmvn install -DskipTests
+#  or
+# lbmvn clean install
+
+mvn install -pl lockss-parent-pom
+mvn $@
