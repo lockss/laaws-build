@@ -11,5 +11,4 @@
 #  or
 # lbmvn clean install
 
-mvn install -pl lockss-parent-pom
-mvn "$@"
+mvn install -pl lockss-parent-pom && mvn "$@"
