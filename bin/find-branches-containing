@@ -5,5 +5,29 @@
 # Output a list of all commits containing the pattern, and the
 # branches containing that commit
 
+usage() {
+  echo "Usage: find-branches-containing [-v] <regexp>"
+  echo "  Output a list of all branches containing the pattern"
+  echo "  With -v, output a list of all commits containing the pattern,"
+  echo "     and the branches containing that commit"
+}
+
+verbose=
+while true ; do
+  case "$1" in
+    "-v" )
+      verbose=1
+      shift; continue;;
+    -* )
+      usage
+      exit 1
+  esac
+  break;
+done
+
 commits=`git grep "${1}" $(git rev-list --all)`
-for x in `echo "${commits}" | cut -d : -f 1 | uniq`; do echo "$x"; git branch -a --contains "$x"; done
+if [ -n "${verbose}" ]; then
+  for x in `echo "${commits}" | cut -d : -f 1 | sort -u`; do echo "$x"; git branch -a --contains "$x"; done
+else
+  for x in `echo "${commits}" | cut -d : -f 1 | sort -u`; do echo "$x"; git branch -a --contains "$x"; done | grep '^ ' | sort -u
+fi
