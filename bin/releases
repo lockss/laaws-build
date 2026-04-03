@@ -46,6 +46,24 @@ Exit()
 }
 
 #
+# Should_Resume
+#
+# $1=mod
+# Returns 0 if this module should be processed, 1 if skipped
+Should_Resume()
+{
+  if [ "${__RESUMED}" = true ]; then
+    return 0
+  fi
+  if [ "${1}" = "${RESUME_FROM}" ]; then
+    __RESUMED=true
+    return 0
+  fi
+  echo "${_0}: skipping ${1} (resuming from ${RESUME_FROM})"
+  return 1
+}
+
+#
 # Get_Parent_Version
 #
 Get_Parent_Version()
@@ -141,6 +159,26 @@ Set_Version()
 ### MAIN
 ###
 
+# Pre-parse: extract --resume-from <project> from arguments
+RESUME_FROM=""
+__ARGS=""
+__SKIP_NEXT=false
+for __arg in "$@"; do
+  if [ "${__SKIP_NEXT}" = true ]; then
+    RESUME_FROM="${__arg}"
+    __SKIP_NEXT=false
+  elif [ "${__arg}" = "--resume-from" ]; then
+    __SKIP_NEXT=true
+  else
+    __ARGS="${__ARGS} ${__arg}"
+  fi
+done
+set -- ${__ARGS}
+__RESUMED=true
+if [ -n "${RESUME_FROM}" ]; then
+  __RESUMED=false
+fi
+
 case "${1}" in
 
   --create-release-branches)
@@ -151,6 +189,7 @@ case "${1}" in
     Check_Develop
     Check_Dirty
     for mod in $("${_D0}/repos") . ; do
+      Should_Resume "${mod}" || continue
       (
         cd "${mod}" || Exit "no such module: ${mod}"
         SNAP="$(Get_Version)"
@@ -187,6 +226,7 @@ case "${1}" in
        fi
 
        for mod in $("${_D0}/repos") . ; do
+         Should_Resume "${mod}" || continue
          (
            cd "${mod}" || Exit "no such module: ${mod}"
            VERS_FROM="$(Get_Version)"
@@ -212,13 +252,14 @@ case "${1}" in
     Check_Develop
     Check_Dirty
     for mod in $("${_D0}/repos") . ; do
+      Should_Resume "${mod}" || continue
       (
         cd "${mod}" || Exit "no such module: ${mod}"
         SNAP="$(Get_Version)"
         VERS="${SNAP%-SNAPSHOT}"
         RELBRA="$(Release_Branch_Name "${VERS}" "${mod}")"
         git checkout "${RELBRA}" || Exit 'git checkout failed'
-        
+
         Set_Version "${SNAP}" "${VERS}"
         PARSNAP="$(Get_Parent_Version)"
         PARVERS="${PARSNAP%-SNAPSHOT}"
@@ -236,6 +277,7 @@ case "${1}" in
     Check_Develop
     Check_Dirty
     for mod in $("${_D0}/repos") . ; do
+      Should_Resume "${mod}" || continue
       (
         cd "${mod}" || Exit "no such module: ${mod}"
         SNAP="$(Get_Version)"
@@ -283,6 +325,7 @@ case "${1}" in
 
   --synthesize-release-branch)
     for mod in $("${_D0}/repos") . ; do
+      Should_Resume "${mod}" || continue
       if [ "${mod}" = '.' ] ; then
         break
       fi
@@ -297,6 +340,7 @@ case "${1}" in
 
    --synthesize-hotfix-branch)
      for mod in $("${_D0}/repos") . ; do
+       Should_Resume "${mod}" || continue
        if [ "${mod}" = '.' ] ; then
          break
        fi
@@ -311,6 +355,7 @@ case "${1}" in
 
   --emerge-release-branches)
     for mod in . $("${_D0}/repos") ; do
+      Should_Resume "${mod}" || continue
       if [ "${mod}" = '.' ] ; then
         VERS2="$(Get_Version)"
         RELBRA2="$(Release_Branch_Name "${VERS2}")"
@@ -340,6 +385,7 @@ case "${1}" in
     git checkout master || Exit 'git checkout master failed'
     git pull || Exit 'git pull failed'
     for mod in $("${_D0}/repos") . ; do ###FIXME This uses the POM of master so it won't know about new submodules!
+      Should_Resume "${mod}" || continue
       if [ "${mod}" = '.' ] ; then
         RELBRA="$(git branch | grep --only-matching 'release-[0-9][^ ]\+')"
       else
@@ -397,6 +443,7 @@ case "${1}" in
     git checkout develop || Exit 'git checkout develop failed'
     git pull || Exit 'git pull failed'
     for mod in $("${_D0}/repos") . ; do
+      Should_Resume "${mod}" || continue
       if [ "${mod}" = '.' ] ; then
         RELBRA="$(git branch | grep --only-matching 'release-[0-9][^ ]\+')"
       else
