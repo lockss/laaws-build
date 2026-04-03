@@ -30,19 +30,26 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 usage() {
-  echo "Usage: foreach [-c] <command ...>
+  echo "Usage: foreach [-c] [--resume-from <module>] <command ...>
   echo "  Executes command for each module in the project.
   echo "  Normally exits if command returns non-zero"
-  echo "  -c   Continue on non-zero status"
+  echo "  -c                      Continue on non-zero status"
+  echo "  --resume-from <module>  Skip modules until <module> is reached"
 }
 
 noerr=""
+RESUME_FROM=""
+__RESUMED=true
 
 while true ; do
   case "$1" in
     "-c" )
       noerr=1
       shift; continue;;
+    "--resume-from" )
+      RESUME_FROM="$2"
+      __RESUMED=false
+      shift 2; continue;;
     -* )
       usage
       exit 1
@@ -65,6 +72,14 @@ err_exit() {
 }
 
 for MOD in $(./bin/repos) ; do
+  if [ "${__RESUMED}" != true ]; then
+    if [ "${MOD}" = "${RESUME_FROM}" ]; then
+      __RESUMED=true
+    else
+      echo "Skipping ${MOD} (resuming from ${RESUME_FROM})"
+      continue
+    fi
+  fi
   env MODULE=${MOD} /bin/sh -c "echo '-------- ${MOD} --------' && cd ${MOD} && ${CMD}" || err_exit ${MOD}
 done
 if [ -n "${errs}" ]; then
