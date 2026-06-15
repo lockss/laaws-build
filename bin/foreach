@@ -72,6 +72,7 @@ err_exit() {
 }
 
 for MOD in $(./bin/repos) ; do
+  export MOD
   if [ "${__RESUMED}" != true ]; then
     if [ "${MOD}" = "${RESUME_FROM}" ]; then
       __RESUMED=true
