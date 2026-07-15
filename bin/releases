@@ -425,16 +425,16 @@ case "${1}" in
       Exit "stopping"
     fi
     # Compute Git tags and tag messages
-    for mod in $("${_D0}/repos") THE_END ; do ###FIXME This uses the POM of master so it won't know about new submodules!
+    for mod in . $("${_D0}/repos") THE_END ; do ###FIXME This uses the POM of master so it won't know about new submodules!
       if [ "${mod}" = 'THE_END' ] ; then
         break
       fi
       if [ "${mod}" = '.' ] ; then
-        git tag -am "version-${VERS}" "${MAINNAME} version ${VERS}"
+        git tag -am "${MAINNAME} version ${VERS}" "version-${VERS}"
       else
         MODRELBRA="$(git branch | grep --only-matching "release-${mod}-[^ ]\+")"
         MODVERS="$(echo "${MODRELBRA}" | sed -e "s@^release-${mod}-@@")"
-        git tag -am "version-${mod}-${MODVERS}" "${mod} version ${MODVERS}"
+        git tag -am "${mod} version ${MODVERS}" "version-${mod}-${MODVERS}"
       fi
     done
     ;;
