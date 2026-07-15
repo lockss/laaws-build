@@ -384,49 +384,58 @@ case "${1}" in
   --merge-into-master)
     git checkout master || Exit 'git checkout master failed'
     git pull || Exit 'git pull failed'
-    for mod in $("${_D0}/repos") . ; do ###FIXME This uses the POM of master so it won't know about new submodules!
-      Should_Resume "${mod}" || continue
-      if [ "${mod}" = '.' ] ; then
-        RELBRA="$(git branch | grep --only-matching 'release-[0-9][^ ]\+')"
-        VERS="$(echo "${RELBRA}" | sed -e "s@^release-@@")"
-        TAGMSG="$(basename "$(pwd)") version ${VERS}"
-      else
-        RELBRA="$(git branch | grep --only-matching "release-${mod}-[^ ]\+")"
-        VERS="$(echo "${RELBRA}" | sed -e "s@^release-${mod}-@@")"
-        TAGMSG="${mod} version ${VERS}"
-      fi
-      if [ -z "${RELBRA}" ] ; then
-        git branch
-        Exit "could not infer release branch"
-      fi
-      #git merge --squash --strategy=ort --strategy-option=theirs "origin/${RELBRA}"
-      git read-tree -um "origin/${RELBRA}"
-      if [ "$?" != "0" ] ; then
-        git status
-        echo "----- ENTERING SUBSHELL -----"
-        echo "Remember to perform the commit."
-        env PS1="\$ " /bin/bash --norc -i
-        echo "----- EXITING SUBSHELL -----"
-        echo "Continue? (y/n)"
-        read __ANS
-        if [ "${__ANS}" != "y" ] ; then
-          Exit "interrupted after subshell"
-        fi 
-      else
-        # git commit
-        git commit -am "${TAGMSG} version ${VERS}"
-      fi
-      echo "Diff from ${RELBRA}:"
-      git diff --compact-summary "origin/${RELBRA}"
+    RELBRA="$(git branch | grep --only-matching 'release-[0-9][^ ]\+')"
+    VERS="$(echo "${RELBRA}" | sed -e "s@^release-@@")"
+    if [ -z "${RELBRA}" ] ; then
+      git branch
+      Exit "could not infer release branch"
+    fi
+    #git merge --squash --strategy=ort --strategy-option=theirs "origin/${RELBRA}"
+    git read-tree -um "origin/${RELBRA}"    
+    if [ "$?" != "0" ] ; then
+      git status
+      echo "----- ENTERING SUBSHELL -----"
+      echo "Remember to perform the commit."
+      env PS1="\$ " /bin/bash --norc -i
+      echo "----- EXITING SUBSHELL -----"
       echo "Continue? (y/n)"
       read __ANS
       if [ "${__ANS}" != "y" ] ; then
-        Exit "stopping"
+        Exit "interrupted after subshell"
+      fi 
+    else
+      # git commit
+      MAINNAME="$(basename "$(pwd)")"
+      COMMSG="${MAINNAME} version ${VERS}"
+      for mod in $("${_D0}/repos") THE_END ; do ###FIXME This uses the POM of master so it won't know about new submodules!
+        if [ "${mod}" = 'THE_END' ] ; then
+          break
+        fi
+        MODRELBRA="$(git branch | grep --only-matching "release-${mod}-[^ ]\+")"
+        MODVERS="$(echo "${MODRELBRA}" | sed -e "s@^release-${mod}-@@")"
+        COMMSG="${COMMSG}$(printf "\n%s version %s" "${mod}" "${MODVERS}")"
+      done
+      git commit -am "${COMMSG}"
+    fi
+    echo "Diff from ${RELBRA}:"
+    git diff --compact-summary "origin/${RELBRA}"
+    echo "Continue? (y/n)"
+    read __ANS
+    if [ "${__ANS}" != "y" ] ; then
+      Exit "stopping"
+    fi
+    # Compute Git tags and tag messages
+    for mod in $("${_D0}/repos") THE_END ; do ###FIXME This uses the POM of master so it won't know about new submodules!
+      if [ "${mod}" = 'THE_END' ] ; then
+        break
       fi
-      # Compute Git tag and tag message
-      TAG="version-${RELBRA#release-}"
-      # Perform Git tag
-      git tag -am "${TAGMSG}" "${TAG}"
+      if [ "${mod}" = '.' ] ; then
+        git tag -am "version-${VERS}" "${MAINNAME} version ${VERS}"
+      else
+        MODRELBRA="$(git branch | grep --only-matching "release-${mod}-[^ ]\+")"
+        MODVERS="$(echo "${MODRELBRA}" | sed -e "s@^release-${mod}-@@")"
+        git tag -am "version-${mod}-${MODVERS}" "${mod} version ${MODVERS}"
+      fi
     done
     ;;
     
