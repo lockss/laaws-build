@@ -7,7 +7,8 @@ case "$1" in
   -p | --push )
     shift
     ( cd lockss-parent-pom && mvn install ) && \
-    mvn clean deploy -P doSnapshot -DskipTests=true -DskipArtifactUpload=true -DskipGpg=true -DskipJavadoc=true "$@"
+    mvn clean deploy -P doDockerBuild -DskipTests=true -DskipArtifactUpload=true -DskipGpg=true -DskipJavadoc=true "$@"
+#    mvn clean deploy -P doSnapshot -DskipTests=true -DskipArtifactUpload=true -DskipGpg=true -DskipJavadoc=true "$@"
     break;;
   * )
     ( cd lockss-parent-pom && mvn install ) && \
